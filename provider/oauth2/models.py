@@ -71,10 +71,10 @@ class Client(models.Model):
         # extract values that we care about
         for field in cls._meta.fields:
             name = field.name
-            val = data.get(field.name, None)
+            val = getattr(data, field.name, None)
 
             # handle relations
-            if val and field.rel:
+            if val and field.rel and hasattr(val, 'items'):
                 val = deserialize_instance(field.rel.to, val)
 
             kwargs[name] = val
